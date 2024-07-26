@@ -1,0 +1,11 @@
+{%  if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <div style="width: 400px;" 
+     class="alert alert-dismissible fade show {{message.tags}} mx-auto mt-3" 
+     role="alert">
+       {{message}}
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
