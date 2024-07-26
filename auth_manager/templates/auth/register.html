@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Register Page{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+<div id="mydiv" class="mt-5 mx-auto" style="width: 300px;">
+    <div class="text-center">
+        <h3 class="text-primary">Register</h3>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="text-center">
+            <button class="btn btn-md btn-primary rounded-pill" type="submit">Register</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
