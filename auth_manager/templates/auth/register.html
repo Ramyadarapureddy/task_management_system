@@ -8,13 +8,20 @@
 {% block content %}
 <div id="mydiv" class="mt-5 mx-auto" style="width: 300px;">
     <div class="text-center">
-        <h3 class="text-primary">Register</h3>
+        <h3 style="color: purple;">Register</h3>
     </div>
     <form method="POST">
         {% csrf_token %}
         {{ form|crispy }}
         <div class="text-center">
-            <button class="btn btn-md btn-primary rounded-pill" type="submit">Register</button>
+            <button 
+                style="background-color: purple; 
+                color: whitesmoke;
+                font-family: italic;" 
+                class="btn btn-md  rounded-pill" 
+                type="submit">
+                Register
+            </button>
         </div>
     </form>
 </div>
