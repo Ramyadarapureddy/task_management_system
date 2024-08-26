@@ -14,6 +14,78 @@
             <label for="taskName">Task Name : </label>
             <input type="text" class="form-control" id="taskName" name="name" placeholder="Enter Task Name" required>
         </div>
+        <br>
+        <div class="form-group">
+            <label for="taskCategory">Category : </label>
+            <select class="form-control" name="category" id="taskCategory">
+                <option value="">Select Category</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="assigned_to">Assigned User : </label>
+            <select class="form-control" name="assigned_to" id="assigned_to" required>
+                <option value="">Select User</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="startDate">Start Date:</label>
+            <input type="datetime-local" class="form-control" id="startDate" name="start_date" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="endDate">End Date:</label>
+            <input type="datetime-local" class="form-control" id="endDate" name="end_date" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="priority">Priority:</label>
+            <input type="number" name="priority" id="priority" class="form-control" min="1" value="1" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="location">Location:</label>
+            <textarea name="location" id="location" class="form-control" placeholder="Enter Task Location"></textarea>
+        </div>
+        <br>
+        <button style="margin-left: 600px;" type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
+
+<script>
+    function validateForm(){
+        var startDate = document.getElementById('startDate').value;
+        var endDate = document.getElementById('endDate').value;
+        var category = document.getElementById('taskCategory').value;
+        var assignedTo = document.getElementById('assigned_to').value;
+
+        if (!category) {
+            alert("Please select a category.");
+            return false;
+        }
+
+        if (!assignedTo) {
+            alert("Please select a user.");
+            return false;
+        }
+        
+        if (new Date(startDate) >= new Date(endDate)){
+            alert("End Date Must be After the Start Date.");
+            return false;
+        }
+        return true;
+    }
+</script>
 {% endblock %}
