@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Category Page{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 style="font-size: 30px;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; color: rgb(20, 12, 138);" class="text-center">Create Category</h2><br>
+    <form method="post" action="{% url 'create_category' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="categoryName">Category Name : </label><p></p>
+            <input type="text" class="form-control" id="categoryName", name="name" placeholder="Enter Category Name" required>
+        </div><br>
+        <button style="margin-left: 600px;" type="submit" class="text-center btn btn-primary">Create</button>
+    </form>
+</div>
+{% endblock %}
