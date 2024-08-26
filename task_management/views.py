@@ -39,7 +39,7 @@ def create_task(request):
             organizer=request.user,  
             assigned_to=assigned_to
         )
-
+        messages.success(request, "Created task created successfully!")
         return redirect('category_list')
     else:
         categories = Category.objects.all()
@@ -53,5 +53,11 @@ def create_category(request):
         name = request.POST.get('name')
         Category.objects.create(name=name)
         messages.success(request, "Category created successfully!")
-        return redirect('home')
+        return redirect('category_list')
     return render(request, 'tasks/create_category.html')
+
+
+# category list
+def category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'tasks/category_list.html',{'categories':categories})
