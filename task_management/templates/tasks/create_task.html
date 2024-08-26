@@ -8,7 +8,7 @@
         Add Task
     </h2>
     <br>
-    <form method="post" action="{% url 'create_task' %}">
+    <form method="post" action="{% url 'create_task' %}" onsubmit="return validateForm();">
         {% csrf_token %}
         <div class="form-group">
             <label for="taskName">Task Name : </label>
@@ -66,8 +66,8 @@
 
 <script>
     function validateForm(){
-        var startDate = document.getElementById('startDate').value;
-        var endDate = document.getElementById('endDate').value;
+        var startDateInput = document.getElementById('startDate').value;
+        var endDateInput = document.getElementById('endDate').value;
         var category = document.getElementById('taskCategory').value;
         var assignedTo = document.getElementById('assigned_to').value;
 
@@ -81,10 +81,20 @@
             return false;
         }
         
-        if (new Date(startDate) >= new Date(endDate)){
+        var startDate = new Date(startDateInput)
+        var endDate = new Date(endDateInput)
+
+
+        if (startDate >= endDate){
             alert("End Date Must be After the Start Date.");
             return false;
         }
+
+        if (endDate < new Date()){
+            alert("End Date Cannot be in the past.");
+            return false;
+        }
+
         return true;
     }
 </script>
