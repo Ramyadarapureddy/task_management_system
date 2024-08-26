@@ -23,12 +23,12 @@ class Task(models.Model):
         ('Completed', 'Completed'),
     ]
 
-    title = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     assigned_to = models.ForeignKey(get_user_model(),on_delete=models.SET_NULL, null=True, related_name='assigned_tasks')
-    start_date = models.DateField()
-    due_date = models.DateField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
     priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES)
     location = models.CharField(max_length=255, null = True, blank=True)
     status = models.CharField(max_length=50, choices= STATUS_CHOICES)
