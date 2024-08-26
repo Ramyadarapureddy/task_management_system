@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Category Tasks{% endblock %}
+
+{% block content %}
+<div class="container mb-3">
+    <h2 class="text-center">{{ category.name }}</h2><br>
+    <div class="mb-3">
+        <a href="{% url 'create_task' %}" class="btn btn-primary">Add New Task</a>
+        <a href="{% url 'category_list' %}" class="btn btn-secondary ml-2">Back To Categories</a>
+    </div>
+    <table id="taskTable" class="table">
+        <thead>
+            <tr>
+                <th>Task Name</th>
+                <th>Assigned To</th>
+                <th>Start Date</th>
+                <th>Time Left</th>
+                <th>
+                    Priority <button class="btn btn-link" onclick="sortByPriority()">&#x25B2;</button>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.name }}</td>
+                <td>{{ task.assigned_to.username }}</td>
+                <td>{{ task.start_date }}</td>
+                <td>
+                    <div id="countdown_{{ task.id }}" class="count_down-timer"></div>
+                    <input type="hidden" id="startDate_{{ task.id }}" value="{{ task.start_date|date:"Y/m/d H:i:s" }}">
+                    <input type="hidden" id="endDate_{{ task.id }}" value="{{ task.end_date|date:"Y/m/d H:i:s" }}">
+                </td>
+                <td>{{ task.priority }}</td>
+                <td>
+                    <a href="" class="btn btn-warning btn-sm">Update</a>
+                    <form method="post" action="" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#taskModal_{{ task.id }}">Details</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for task Details -->
+{% for task in tasks %}
+<div class="modal fade" id="taskModal_{{ task.id }}" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel_{{ task.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel_{{ task.id }}">{{ task.name }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Name : </strong>{{ task.name }}</p>
+                <p><strong>Category : </strong>{{ task.category.name }}</p>
+                <p><strong>Assigned To : </strong>{{ task.assigned_to.username }}</p>
+                <p><strong>Start Date : </strong>{{ task.start_date }}</p>
+                <p><strong>End Date : </strong>{{ task.end_date }}</p>
+                <p><strong>Priority : </strong>{{ task.priority }}</p>
+                <p><strong>Description : </strong>{{ task.description }}</p>
+                <p><strong>Location : </strong>{{ task.location }}</p>
+                <p><strong>Organizer : </strong>{{ task.organizer }}</p>
+            </div>
+            <div class="modal-foooter">
+                <button style="margin-left: 220px; margin-bottom: 25px;" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+    function sortByPriority() {
+        var table = document.getElementById("taskTable");
+        var rows = Array.from(table.getElementsByTagName("tr")).slice(1); // Skip the header row
+        rows.sort(function(a, b) {
+            var x = parseInt(a.getElementsByTagName("td")[4].innerText); // Priority column
+            var y = parseInt(b.getElementsByTagName("td")[4].innerText);
+            return x - y; 
+        });
+        rows.forEach(function(row) {
+            table.querySelector("tbody").appendChild(row);
+        });
+    }
+
+    
+    function updateCountdownTimers() {
+        var taskElements = document.querySelectorAll('[id^="countdown_"]');
+        taskElements.forEach(function(countdownElement) {
+            var taskId = countdownElement.id.split('_')[1];
+            var startDate = new Date(document.querySelector(`#startDate_${taskId}`).value);
+            var endDate = new Date(document.querySelector(`#endDate_${taskId}`).value);
+            var now = new Date();
+
+            if (now > endDate) {
+                countdownElement.innerText = "Expired";
+            } else if (now < startDate) {
+                countdownElement.innerText = "Task has not started";
+            } else {
+                var timeDiff = endDate - now;
+                var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                countdownElement.innerText = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setInterval(updateCountdownTimers, 1000);
+    });
+</script>
+
+{% endblock %}

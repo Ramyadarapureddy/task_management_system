@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model  
 from django.contrib import messages
@@ -48,6 +48,7 @@ def create_task(request):
 
 
 #create category
+@login_required
 def create_category(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -57,7 +58,27 @@ def create_category(request):
     return render(request, 'tasks/create_category.html')
 
 
-# category list
+# showing category list
+@login_required
 def category_list(request):
     categories = Category.objects.all()
     return render(request, 'tasks/category_list.html',{'categories':categories})
+
+
+# Deleting the category list
+@login_required
+def delete_category(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    if category.task_set.exists():
+        messages.error(request, "You Cannot Delete this category as it contains tasks")
+    else:
+        category.delete()
+        messages.success(request, "Category Deleted Successfully")
+    return redirect('category_list')
+
+#tasks of a category
+@login_required
+def category_tasks(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    tasks = category.task_set.all()
+    return render(request, 'tasks/category_tasks.html', {'category':category,'tasks':tasks})
